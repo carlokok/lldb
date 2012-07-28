@@ -14,12 +14,15 @@ add_lldb_library(lldbPluginSymbolFileDWARF
   DWARFDebugPubnames.cpp
   DWARFDebugPubnamesSet.cpp
   DWARFDebugRanges.cpp
-  DWARFDefines.c
+  DWARFDeclContext.cpp
+  DWARFDefines.cpp
   DWARFDIECollection.cpp
   DWARFFormValue.cpp
   DWARFLocationDescription.cpp
   DWARFLocationList.cpp
   LogChannelDWARF.cpp
+  NameToDIE.cpp
   SymbolFileDWARF.cpp
   SymbolFileDWARFDebugMap.cpp
+  UniqueDWARFASTType.cpp
   )
