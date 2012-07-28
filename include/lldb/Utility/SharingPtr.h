@@ -28,14 +28,22 @@ template <class T>
 inline T
 increment(T& t)
 {
+#ifdef _MSC_VER
+    return InterlockedIncrement(&t);
+#else
     return __sync_add_and_fetch(&t, 1);
+#endif
 }
 
 template <class T>
 inline T
 decrement(T& t)
 {
+#ifdef _MSC_VER
+     return InterlockedDecrement(&t);
+#else
     return __sync_add_and_fetch(&t, -1);
+#endif
 }
 
 class shared_count
