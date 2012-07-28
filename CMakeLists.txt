@@ -8,6 +8,13 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     "Path to LLVM source code. Not necessary if using an installed LLVM.")
   set(LLDB_PATH_TO_LLVM_BUILD "" CACHE PATH
     "Path to the directory where LLVM was built or installed.")
+    
+  set(LLDB_PATH_TO_CLANG_SOURCE "" CACHE PATH
+    "Path to Clang source code. Not necessary if using an installed Clang.")
+  set(LLDB_PATH_TO_CLANG_BUILD "" CACHE PATH
+    "Path to the directory where Clang was built or installed.")    
+
+  set(LLDB_DISABLE_PYTHON 1 BOOL "Disables the Python scripting integration.")
 
   if (LLDB_PATH_TO_LLVM_SOURCE)
     if (NOT EXISTS "${LLDB_PATH_TO_LLVM_SOURCE}/cmake/config-ix.cmake")
@@ -19,12 +26,20 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
       list(APPEND CMAKE_MODULE_PATH "${LLVM_MAIN_SRC_DIR}/cmake/modules")
     endif()
   endif()
+  
+  if (LLDB_PATH_TO_CLANG_SOURCE)
+      get_filename_component(CLANG_MAIN_SRC_DIR ${LLDB_PATH_TO_CLANG_SOURCE}
+                             ABSOLUTE)
+  endif()  
 
   list(APPEND CMAKE_MODULE_PATH "${LLDB_PATH_TO_LLVM_BUILD}/share/llvm/cmake")
 
   get_filename_component(PATH_TO_LLVM_BUILD ${LLDB_PATH_TO_LLVM_BUILD}
                          ABSOLUTE)
-
+                         
+  get_filename_component(PATH_TO_CLANG_BUILD ${LLDB_PATH_TO_CLANG_BUILD}
+                         ABSOLUTE)                         
+                         
   include(AddLLVM)
   include("${LLDB_PATH_TO_LLVM_BUILD}/share/llvm/cmake/LLVMConfig.cmake")
   include(HandleLLVMOptions)
@@ -33,10 +48,14 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 
   set(LLVM_MAIN_INCLUDE_DIR "${LLVM_MAIN_SRC_DIR}/include")
   set(LLVM_BINARY_DIR ${CMAKE_BINARY_DIR})
+  
+  set(CLANG_MAIN_INCLUDE_DIR "${CLANG_MAIN_SRC_DIR}/include")
 
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   include_directories("${PATH_TO_LLVM_BUILD}/include"
-                      "${LLVM_MAIN_INCLUDE_DIR}")
+                      "${LLVM_MAIN_INCLUDE_DIR}"
+                      "${PATH_TO_CLANG_BUILD}/include"
+                      "${CLANG_MAIN_INCLUDE_DIR}")
   link_directories("${PATH_TO_LLVM_BUILD}/lib")
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -44,6 +63,10 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
   set(LLDB_BUILT_STANDALONE 1)
+  
+  if (LLDB_DISABLE_PYTHON)
+    add_definitions( -DLLDB_DISABLE_PYTHON )
+  endif()  
 endif()
 
 set(LLDB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -51,7 +74,7 @@ set(LLDB_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed. CMake would overwrite "
-"the makefiles distributed with LLVM. Please create a directory and run cmake "
+"the makefiles distributed with LLDB. Please create a directory and run cmake "
 "from there, passing the path to this source directory as the last argument. "
 "This process created the file `CMakeCache.txt' and the directory "
 "`CMakeFiles'. Please delete them.")
@@ -81,6 +104,7 @@ macro(add_lldb_library name)
   target_link_libraries(${name} ${LLVM_USED_LIBS})
   llvm_config(${name} ${LLVM_LINK_COMPONENTS})
   target_link_libraries(${name} ${LLVM_COMMON_LIBS})
+  #target_link_libraries(${name} ${CLANG_USED_LIBS})
   link_system_libs(${name})
 
   install(TARGETS ${name}
