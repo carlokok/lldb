@@ -66,8 +66,26 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   
   if (LLDB_DISABLE_PYTHON)
     add_definitions( -DLLDB_DISABLE_PYTHON )
-  endif()  
+  endif() 
 endif()
+
+macro(add_lldb_definitions)
+  # We don't want no semicolons on LLDB_DEFINITIONS:
+  foreach(arg ${ARGN})
+    set(LLDB_DEFINITIONS "${LLVM_DEFINITIONS} ${arg}")
+  endforeach(arg)
+  add_definitions( ${ARGN} )
+endmacro(add_lldb_definitions)
+
+# Disable MSVC warnings
+if( MSVC )
+  add_lldb_definitions(
+    -wd4018 # Suppress 'warning C4018: '>=' : signed/unsigned mismatch'
+    -wd4068 # Suppress 'warning C4068: unknown pragma'
+    -wd4150 # Suppress 'warning C4150: deletion of pointer to incomplete type'
+    -wd4521 # Suppress 'warning C4521: 'type' : multiple copy constructors specified'
+  )
+endif() 
 
 set(LLDB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(LLDB_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
