@@ -246,8 +246,10 @@ ClangExpressionParser::ClangExpressionParser (ExecutionContextScope *exe_scope,
         {
             if (process_sp->GetObjCLanguageRuntime()->GetRuntimeVersion() == eAppleObjC_V2)
             {
+#if CLANG_MAJOR_VERSION == 3 && CLANG_MINOR_VERSION < 2
                 m_compiler->getLangOpts().ObjCNonFragileABI = true;     // NOT i386
                 m_compiler->getLangOpts().ObjCNonFragileABI2 = true;    // NOT i386
+#endif
             }
             
             if (process_sp->GetObjCLanguageRuntime()->HasNewLiteralsAndIndexing())
