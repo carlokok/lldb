@@ -76,7 +76,7 @@ RegularExpression::operator= (const RegularExpression &rhs)
 //----------------------------------------------------------------------
 RegularExpression::~RegularExpression()
 {
-    Free();
+
 }
 
 //----------------------------------------------------------------------
