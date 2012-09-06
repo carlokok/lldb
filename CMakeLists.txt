@@ -58,6 +58,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
                       "${CLANG_MAIN_INCLUDE_DIR}"
                       "${CMAKE_CURRENT_SOURCE_DIR}/source")
   link_directories("${PATH_TO_LLVM_BUILD}/lib")
+  link_directories("${PATH_TO_CLANG_BUILD}/lib")
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

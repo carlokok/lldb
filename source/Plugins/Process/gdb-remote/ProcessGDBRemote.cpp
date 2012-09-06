@@ -9,12 +9,20 @@
 
 // C Includes
 #include <errno.h>
+
+#ifdef _POSIX_SOURCE
 #include <spawn.h>
+#endif
 #include <stdlib.h>
+#ifdef _POSIX_SOURCE
 #include <netinet/in.h>
 #include <sys/mman.h>       // for mmap
 #include <sys/stat.h>
 #include <sys/types.h>
+#endif
+#ifndef _POSIX_SOURCE
+#define	SIGTRAP		5	
+#endif
 #include <time.h>
 
 // C++ Includes
@@ -686,7 +694,11 @@ ProcessGDBRemote::ConnectToDebugserver (const char *connect_url)
             if (retry_count >= max_retry_count)
                 break;
 
-            usleep (100000);
+#ifdef _WIN32
+			Sleep (100);
+#else
+			usleep (100000);
+#endif
         }
     }
 
@@ -721,7 +733,7 @@ ProcessGDBRemote::ConnectToDebugserver (const char *connect_url)
     for (size_t idx = 0; idx < num_cmds; idx++)
     {
         StringExtractorGDBRemote response;
-        printf ("Sending command: \%s.\n", GetExtraStartupCommands().GetArgumentAtIndex(idx));
+        printf ("Sending command: \\%s.\n", GetExtraStartupCommands().GetArgumentAtIndex(idx));
         m_gdb_comm.SendPacketAndWaitForResponse (GetExtraStartupCommands().GetArgumentAtIndex(idx), response, false);
     }
     return error;
@@ -2513,7 +2525,11 @@ ProcessGDBRemote::MonitorDebugserverProcess
             // Sleep for a half a second to make sure our inferior process has
             // time to set its exit status before we set it incorrectly when
             // both the debugserver and the inferior process shut down.
+#if _WIN32
+			Sleep (500);
+#else
             usleep (500000);
+#endif
             // If our process hasn't yet exited, debugserver might have died.
             // If the process did exit, the we are reaping it.
             const StateType state = process->GetState();
@@ -2553,7 +2569,11 @@ ProcessGDBRemote::KillDebugserverProcess ()
 {
     if (m_debugserver_pid != LLDB_INVALID_PROCESS_ID)
     {
-        ::kill (m_debugserver_pid, SIGINT);
+#if _WIN32
+		TerminateProcess ((HANDLE)m_debugserver_pid, 1);
+#else
+		::kill (m_debugserver_pid, SIGINT);
+#endif
         m_debugserver_pid = LLDB_INVALID_PROCESS_ID;
     }
 }
@@ -2615,7 +2635,7 @@ ProcessGDBRemote::StopAsyncThread ()
 }
 
 
-void *
+thread_result_t
 ProcessGDBRemote::AsyncThread (void *arg)
 {
     ProcessGDBRemote *process = (ProcessGDBRemote*) arg;

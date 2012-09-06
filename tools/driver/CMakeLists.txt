@@ -23,9 +23,12 @@ set( LLDB_USED_LIBS
   #lldbPluginSymbolVendorMacOSX
   
   # Windows
+  lldbPluginProcessGDBRemote
   lldbHostWindows
   lldbPluginPlatformWindows
   lldbPluginObjectFilePECOFF
+  lldbPluginObjectFileMachO
+  lldbPluginPlatformGDB
   
   # Linux
   #lldbHostLinux
@@ -43,7 +46,8 @@ set( CLANG_USED_LIBS
   clangFrontend
   clangLex
   clangParse
-  clangRewrite
+  clangRewriteCore
+  clangRewriteFrontend
   clangSema
   clangSerialization
   )  
