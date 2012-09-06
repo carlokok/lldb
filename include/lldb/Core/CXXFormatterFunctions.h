@@ -11,6 +11,9 @@
 #define liblldb_CXXFormatterFunctions_h_
 
 #include "lldb/lldb-forward.h"
+#ifdef _MSC_VER
+typedef unsigned __int64 uint64_t;
+#endif
 
 namespace lldb_private {
     namespace formatters
