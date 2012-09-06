@@ -21,6 +21,8 @@
 #include <pthread.h>
 #endif
 // END: MinGW work around
+#else
+#include <winsock2.h>
 #endif
 
 // C++ Includes
@@ -64,8 +66,10 @@ public:
     uint64_t
     GetAsSecondsSinceJan1_1970() const;
 
+#ifdef _POSIX_SOURCE
     struct timespec
     GetAsTimeSpec () const;
+#endif
 
     struct timeval
     GetAsTimeVal () const;
