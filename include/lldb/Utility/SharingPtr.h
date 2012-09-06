@@ -13,6 +13,12 @@
 #include <algorithm>
 #include <memory>
 
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <Windows.h>
+#endif
+
 //#define ENABLE_SP_LOGGING 1 // DON'T CHECK THIS LINE IN UNLESS COMMENTED OUT
 #if defined (ENABLE_SP_LOGGING)
 
