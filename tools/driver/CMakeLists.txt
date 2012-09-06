@@ -1,39 +1,57 @@
 set(LLVM_NO_RTTI 1)
 
-set( LLVM_USED_LIBS
+set( LLDB_USED_LIBS
   lldbAPI
-  lldbInterpreter
+  lldbBreakpoint
+  lldbCommands
+  lldbCore
+  lldbExpression
+  lldbHost
   lldbInitAndLog
-  lldbAPI
+  lldbInterpreter
+  lldbSymbol
+  lldbTarget  
+  lldbUtility
+  
+  # Plugins
   lldbPluginDisassemblerLLVM
-  lldbPluginObjectFileELF
-  lldbPluginObjectContainerBSDArchive
   lldbPluginSymbolFileDWARF
   lldbPluginSymbolFileSymtab
-#  lldbPluginSymbolVendorMacOSX
-  lldbTarget
-  lldbCommands
-  lldbBreakpoint
-  lldbCore
-  lldbSymbol
-  lldbExpression
-  lldbUtility
-  lldbHostLinux
-  clangFrontend
-  clangDriver
-  clangCodeGen
-  clangSema
-  clangChecker
+  
+  #lldbPluginObjectFileELF
+  #lldbPluginObjectContainerBSDArchive
+  #lldbPluginSymbolVendorMacOSX
+  
+  # Windows
+  lldbHostWindows
+  lldbPluginPlatformWindows
+  lldbPluginObjectFilePECOFF
+  
+  # Linux
+  #lldbHostLinux
+  
+  Ws2_32
+  )
+  
+set( CLANG_USED_LIBS
   clangAnalysis
-  clangRewrite
   clangAST
-  clangParse
-  clangLex
   clangBasic
-  EnhancedDisassembly
-  edit
-  python2.6
-)
+  clangCodeGen
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangSema
+  clangSerialization
+  )  
+  
+set( LLDB_DRIVER_LIBS
+  #edit
+  #python2.6
+  )
 
 set( LLVM_LINK_COMPONENTS
   ${LLVM_TARGETS_TO_BUILD}
@@ -53,6 +71,9 @@ set( LLVM_LINK_COMPONENTS
 
 add_lldb_executable(lldb
   Driver.cpp
+  DriverEvents.cpp
+  DriverOptions.cpp
+  DriverPosix.cpp
   IOChannel.cpp
   )
 
