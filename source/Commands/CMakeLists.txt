@@ -27,4 +27,5 @@ add_lldb_library(lldbCommands
   CommandObjectType.cpp
   CommandObjectVersion.cpp
   CommandObjectWatchpoint.cpp
+  CommandObjectWatchpointCommand.cpp
   )

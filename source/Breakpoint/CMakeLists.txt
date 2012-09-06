@@ -21,4 +21,5 @@ add_lldb_library(lldbBreakpoint
   StoppointLocation.cpp
   Watchpoint.cpp
   WatchpointList.cpp
+  WatchpointOptions.cpp
   )
