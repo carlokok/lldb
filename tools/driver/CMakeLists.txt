@@ -29,6 +29,8 @@ set( LLDB_USED_LIBS
   lldbPluginObjectFilePECOFF
   lldbPluginObjectFileMachO
   lldbPluginPlatformGDB
+  lldbPluginProcessUtility
+  lldbPluginDynamicLoaderStatic
   
   # Linux
   #lldbHostLinux

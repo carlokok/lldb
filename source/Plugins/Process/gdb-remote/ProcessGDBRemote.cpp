@@ -1733,7 +1733,11 @@ ProcessGDBRemote::DoDestroy ()
         // FIXME: These should be ConstStrings so we aren't doing strcmp'ing.
         if (platform_sp
             && platform_sp->GetName()
+#if defined (__APPLE__)
             && strcmp (platform_sp->GetName(), PlatformRemoteiOS::GetShortPluginNameStatic()) == 0)
+#else
+			&& false)
+#endif
         {
             if (m_destroy_tried_resuming)
             {
