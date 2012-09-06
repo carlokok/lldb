@@ -55,7 +55,8 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   include_directories("${PATH_TO_LLVM_BUILD}/include"
                       "${LLVM_MAIN_INCLUDE_DIR}"
                       "${PATH_TO_CLANG_BUILD}/include"
-                      "${CLANG_MAIN_INCLUDE_DIR}")
+                      "${CLANG_MAIN_INCLUDE_DIR}"
+                      "${CMAKE_CURRENT_SOURCE_DIR}/source")
   link_directories("${PATH_TO_LLVM_BUILD}/lib")
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -133,6 +134,8 @@ endmacro(add_lldb_library)
 
 macro(add_lldb_executable name)
   add_llvm_executable(${name} ${ARGN})
+  target_link_libraries(${name} ${LLDB_USED_LIBS})
+  target_link_libraries(${name} ${CLANG_USED_LIBS})
   set_target_properties(${name} PROPERTIES FOLDER "lldb executables")
 endmacro(add_lldb_executable)
 
@@ -152,3 +155,4 @@ install(DIRECTORY include/
 #add_subdirectory(scripts)
 add_subdirectory(source)
 #add_subdirectory(test)
+add_subdirectory(tools)
