@@ -394,7 +394,7 @@ IOChannel::LibeditGetInput (std::string &new_line)
 	
 }
 
-thread_result_t *
+thread_result_t 
 IOChannel::IOReadThread (void *ptr)
 {
     IOChannel *myself = static_cast<IOChannel *> (ptr);
@@ -640,24 +640,14 @@ IOChannel::SetGettingCommand (bool new_value)
     m_getting_command = new_value;
 }
 
-IOLocker::IOLocker (pthread_mutex_t &mutex) :
+IOLocker::IOLocker (llvm::sys::Mutex &mutex) :
     m_mutex_ptr (&mutex)
 {
-#ifdef _POSIX_SOURCE
-    if (m_mutex_ptr)
-        ::pthread_mutex_lock (m_mutex_ptr);
-#else
     mutex.acquire();		
-#endif
         
 }
 
 IOLocker::~IOLocker ()
 {
-#ifdef _POSIX_SOURCE
-    if (m_mutex_ptr)
-        ::pthread_mutex_unlock (m_mutex_ptr);
-#else
     m_mutex_ptr->release();
-#endif		
 }

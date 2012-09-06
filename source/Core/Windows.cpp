@@ -187,4 +187,3 @@ char *dirname(char *path)
 }
 
 #include "lldb/lldb-windows.h"
-#include "getopt.c"

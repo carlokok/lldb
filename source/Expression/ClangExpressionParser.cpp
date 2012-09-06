@@ -43,7 +43,12 @@
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 #include "clang/Lex/Preprocessor.h"
 #include "clang/Parse/ParseAST.h"
+#include "clang/Basic/Version.h"
+#if CLANG_VERSION_MAJOR > 3 || (CLANG_VERSION_MAJOR == 3 && CLANG_VERSION_MINOR  >= 2)
+#include "clang/Rewrite/Frontend/FrontendActions.h"
+#else
 #include "clang/Rewrite/FrontendActions.h"
+#endif
 #include "clang/Sema/SemaConsumer.h"
 #include "clang/StaticAnalyzer/Frontend/FrontendActions.h"
 

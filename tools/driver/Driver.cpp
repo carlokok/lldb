@@ -276,9 +276,8 @@ void Driver::Initialize()
         || m_option_data.m_process_pid != LLDB_INVALID_PROCESS_ID)
     {
         AttachToProcess();
-     }
-    return bytes_len;
-
+    }
+    
     ReadyForCommand ();
 }
 
@@ -348,7 +347,7 @@ main (int argc, char const *argv[], const char *envp[])
         Driver driver;
 
         bool exit = false;
-        SBError error = driver.ParseArgs (argc, argv, stdout, exit)
+        SBError error = driver.ParseArgs (argc, argv, stdout, exit);
         if (error.Fail())
         {
             const char *error_cstr = error.GetCString ();

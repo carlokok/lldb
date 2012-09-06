@@ -67,7 +67,7 @@ OptionValueRegex::SetValueFromCString (const char *value_cstr,
         }
         else
         {
-			error.SetErrorString (m_regex.GetErrorAsCString());
+			error.SetErrorString (m_regex.GetErrorAsCString().data());
         }
         break;
     }

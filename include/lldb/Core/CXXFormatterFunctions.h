@@ -42,16 +42,16 @@ namespace lldb_private {
         bool
         NSString_SummaryProvider (ValueObject& valobj, Stream& stream);
         
-        extern template bool
+        template bool
         NSDictionary_SummaryProvider<true> (ValueObject&, Stream&) ;
         
-        extern template bool
+        template bool
         NSDictionary_SummaryProvider<false> (ValueObject&, Stream&) ;
         
-        extern template bool
+        template bool
         NSData_SummaryProvider<true> (ValueObject&, Stream&) ;
         
-        extern template bool
+        template bool
         NSData_SummaryProvider<false> (ValueObject&, Stream&) ;
         
     }

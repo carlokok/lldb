@@ -19,6 +19,8 @@
 #include "lldb/Core/Debugger.h"
 #include "lldb/Core/PluginManager.h"
 #include "lldb/Host/Host.h"
+#include "lldb/Core/ModuleSpec.h"
+#include "lldb/Core/Module.h"
 
 using namespace lldb;
 using namespace lldb_private;

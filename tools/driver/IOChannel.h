@@ -16,7 +16,9 @@
 #if defined(__FreeBSD__)
 #include <readline/readline.h>
 #else
+#ifndef _WIN32
 #include <editline/readline.h>
+#endif
 #endif
 
 #ifndef _WIN32
