@@ -11,11 +11,17 @@
 #define liblldb_ReadWriteLock_h_
 #if defined(__cplusplus)
 
-#include "lldb/Host/Mutex.h"
-#include "lldb/Host/Condition.h"
-#ifdef _POSIX_SOURCE
+#if defined(WIN32)
+#include "lldb/lldb-defines.h"
+#include <Windows.h>
+#undef interface
+#else
 #include <pthread.h>
 #endif
+
+#include "lldb/Host/Mutex.h"
+#include "lldb/Host/Condition.h"
+
 #include <stdint.h>
 #include <time.h>
 
@@ -38,90 +44,69 @@ namespace lldb_private {
 class ReadWriteLock
 {
 public:
-    ReadWriteLock ()
-#ifdef _POSIX_SOURCE
-        : m_rwlock()
-#endif
+#if defined(WIN32)
+    ReadWriteLock ();
+    ~ReadWriteLock ();
+    bool ReadLock ();
+    bool ReadTryLock ();
+    bool ReadUnlock ();
+    bool WriteLock ();
+    bool WriteTryLock ();
+    bool WriteUnlock ();
+#else
+    ReadWriteLock () :
+        m_rwlock()
     {
-#ifdef _POSIX_SOURCE
         int err = ::pthread_rwlock_init(&m_rwlock, NULL); (void)err;
 #if LLDB_CONFIGURATION_DEBUG
         assert(err == 0);
-#endif
-#else
 #endif
     }
 
     ~ReadWriteLock ()
     {
-#ifdef _POSIX_SOURCE
         int err = ::pthread_rwlock_destroy (&m_rwlock); (void)err;
 #if LLDB_CONFIGURATION_DEBUG
         assert(err == 0);
-#endif
-#else
 #endif
     }
 
     bool
     ReadLock ()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_rdlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
 
     bool
     ReadTryLock ()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_tryrdlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
 
     bool
     ReadUnlock ()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_unlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
     
     bool
     WriteLock()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_wrlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
     
     bool
     WriteTryLock()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_trywrlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
     
     bool
     WriteUnlock ()
     {
-#ifdef _POSIX_SOURCE
         return ::pthread_rwlock_unlock (&m_rwlock) == 0;
-#else
-        return true;
-#endif
     }
+#endif
 
     class ReadLocker
     {
@@ -263,7 +248,9 @@ public:
     };
 
 protected:
-#ifdef _POSIX_SOURCE
+#if defined(WIN32)
+    void* m_data;
+#else
     pthread_rwlock_t m_rwlock;
 #endif
 private:
